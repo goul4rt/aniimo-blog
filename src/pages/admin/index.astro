@@ -1,0 +1,108 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+---
+
+<MainGridLayout title="Editor · Blog Aniimo Tools" description="Painel de publicação do blog, só pra quem tem acesso.">
+  <div id="portao" class="card-base p-6 md:p-9">
+    <p>Carregando…</p>
+  </div>
+</MainGridLayout>
+
+<script>
+  type Eu = { id: string; login: string; avatar: string } | null;
+  type PostResumo = { slug: string; title: string; published: string };
+
+  const portao = document.getElementById("portao")!;
+  const voltar = encodeURIComponent("/admin/");
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+
+  async function iniciar() {
+    const eu = (await fetch("/api/auth/eu.json").then((r) => r.json())) as Eu;
+    if (!eu) {
+      portao.innerHTML = `<p class="mb-4">Editor do blog. Só quem tem acesso liberado entra.</p><a class="btn-card inline-flex rounded-(--radius-large) px-4 h-11" href="/api/auth/entrar?voltar=${voltar}">Entrar com Discord</a>`;
+      return;
+    }
+
+    const lista = await fetch("/api/admin/posts.json");
+    if (!lista.ok) {
+      portao.innerHTML = `<p>Logado como <strong>${esc(eu.login)}</strong>, mas essa conta não edita o blog.</p><a href="/api/auth/sair?voltar=${voltar}">Trocar de conta</a>`;
+      return;
+    }
+    const posts = (await lista.json()) as PostResumo[];
+
+    portao.innerHTML = `
+      <div class="flex items-center justify-between gap-3 flex-wrap mb-6">
+        <span>Logado como <strong>${esc(eu.login)}</strong></span>
+        <a class="btn-card inline-flex rounded-(--radius-large) px-4 h-11" href="/api/auth/sair?voltar=${voltar}">Sair</a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-[220px_1fr]">
+        <div>
+          <p class="font-bold mb-2">Posts</p>
+          <ul id="lista-posts" class="flex flex-col gap-1 text-sm">
+            <li><button type="button" data-slug="" class="underline">+ Novo post</button></li>
+            ${posts.map((p) => `<li class="flex items-center gap-1.5">
+              <button type="button" data-slug="${esc(p.slug)}" class="underline truncate text-left">${esc(p.title)}</button>
+              <button type="button" data-apagar="${esc(p.slug)}" aria-label="Apagar" title="Apagar" class="shrink-0 opacity-60 hover:opacity-100">✕</button>
+            </li>`).join("")}
+          </ul>
+        </div>
+        <form id="form-post" class="flex flex-col gap-3">
+          <input type="hidden" name="slugOriginal" />
+          <label class="flex flex-col gap-1 text-sm">Título<input name="title" required class="border rounded px-3 py-2" /></label>
+          <label class="flex flex-col gap-1 text-sm">Slug (URL, opcional — gerado do título se vazio)<input name="slug" class="border rounded px-3 py-2" /></label>
+          <label class="flex flex-col gap-1 text-sm">Resumo<input name="description" class="border rounded px-3 py-2" /></label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex flex-col gap-1 text-sm">Categoria<input name="category" value="Guias" class="border rounded px-3 py-2" /></label>
+            <label class="flex flex-col gap-1 text-sm">Publicado em<input type="date" name="published" class="border rounded px-3 py-2" /></label>
+          </div>
+          <label class="flex flex-col gap-1 text-sm">Imagem de capa (URL)<input name="image" class="border rounded px-3 py-2" /></label>
+          <label class="flex flex-col gap-1 text-sm">Tags (separadas por vírgula)<input name="tags" class="border rounded px-3 py-2" /></label>
+          <label class="flex flex-col gap-1 text-sm">Conteúdo (markdown)<textarea name="body" required rows="16" class="border rounded px-3 py-2 font-mono text-sm"></textarea></label>
+          <button type="submit" class="btn-card self-start rounded-(--radius-large) px-4 h-11">Publicar</button>
+          <p id="status-post" class="text-sm"></p>
+        </form>
+      </div>`;
+
+    const form = document.getElementById("form-post") as HTMLFormElement;
+    const status = document.getElementById("status-post")!;
+
+    document.getElementById("lista-posts")!.addEventListener("click", async (ev) => {
+      const alvo = ev.target as HTMLElement;
+      const apagarSlug = alvo.dataset.apagar;
+      if (apagarSlug) {
+        if (!confirm(`Apagar "${apagarSlug}"?`)) return;
+        const r = await fetch(`/api/admin/posts.json?slug=${encodeURIComponent(apagarSlug)}`, { method: "DELETE" });
+        if (r.ok) location.reload();
+        return;
+      }
+      const btn = alvo.closest<HTMLButtonElement>("[data-slug]");
+      if (!btn) return;
+      form.reset();
+      (form.elements.namedItem("slugOriginal") as HTMLInputElement).value = btn.dataset.slug || "";
+      if (!btn.dataset.slug) return; // "+ Novo post"
+      // Sem endpoint de detalhe: edição carrega só título/slug; o resto a pessoa reescreve.
+      (form.elements.namedItem("title") as HTMLInputElement).value =
+        posts.find((x) => x.slug === btn.dataset.slug)?.title || "";
+      (form.elements.namedItem("slug") as HTMLInputElement).value = btn.dataset.slug || "";
+    });
+
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      status.textContent = "Publicando...";
+      const dados = Object.fromEntries(new FormData(form).entries());
+      const r = await fetch("/api/admin/posts.json", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(dados),
+      });
+      const resposta = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        status.textContent = resposta.erro || "Não deu pra publicar.";
+        return;
+      }
+      status.textContent = "Publicado! O site atualiza em 1-2 minutos (o commit dispara o rebuild).";
+    });
+  }
+
+  iniciar();
+</script>

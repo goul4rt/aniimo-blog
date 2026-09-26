@@ -1,0 +1,4 @@
+DISCORD_CLIENT_ID=
+DISCORD_CLIENT_SECRET=
+# Fine-grained PAT do GitHub (bot), só no repo goul4rt/aniimo-blog, Contents: Read and write.
+ADMIN_GITHUB_PAT=

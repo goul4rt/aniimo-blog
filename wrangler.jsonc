@@ -1,0 +1,10 @@
+{
+	"name": "aniimo-blog",
+	"compatibility_date": "2026-09-04",
+	"compatibility_flags": ["nodejs_compat"],
+	"routes": [{ "pattern": "blog.aniimo.ogoulart.dev", "custom_domain": true }],
+	// IDs do Discord (não usernames) com permissão de postar. Não é segredo, por isso fica aqui, versionado.
+	"vars": {
+		"ADMIN_DISCORD_IDS": "1287756590338019383,210821759249678336,1532116569793106134"
+	}
+}

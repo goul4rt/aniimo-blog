@@ -95,7 +95,7 @@ import MainGridLayout from "@/layouts/MainGridLayout.astro";
         headers: { "content-type": "application/json" },
         body: JSON.stringify(dados),
       });
-      const resposta = await r.json().catch(() => ({}));
+      const resposta = (await r.json().catch(() => ({}))) as { erro?: string };
       if (!r.ok) {
         status.textContent = resposta.erro || "Não deu pra publicar.";
         return;

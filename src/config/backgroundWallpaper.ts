@@ -35,21 +35,10 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	 *   "assets/images/MobileWallpaper/m2.avif",
 	 * ],
 	 */
-	// Reaproveita as artes/screenshots oficiais de Aniimo já hospedadas no site principal (mesmas capas do blog antigo).
+	// Uma arte oficial só (1920x1080, já hospedada no site principal), em vez de sortear entre as capas do blog.
 	src: {
-		desktop: [
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-gelo-lago.jpg",
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-libelula-flores.jpg",
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-epicgames.jpg",
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-gamevicio.jpg",
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-xbox-showcase.jpg",
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-mariposa-noite.jpg",
-		],
-		mobile: [
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-gelo-lago.jpg",
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-libelula-flores.jpg",
-			"https://aniimo.ogoulart.dev/uploads/blog/aniimo-gamevicio.jpg",
-		],
+		desktop: "https://aniimo.ogoulart.dev/uploads/blog/aniimo-xbox-showcase.jpg",
+		mobile: "https://aniimo.ogoulart.dev/uploads/blog/aniimo-xbox-showcase.jpg",
 	},
 	// 横幅壁纸和全屏壁纸共享配置
 	common: {
@@ -61,7 +50,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		homeText: {
 			// 是否启用主页横幅文字
 			enable: true,
-			title: "Blog Aniimo Tools",
+			title: "Blog AniimoBrasil",
 			titleSize: "4.5rem",
 			subtitle: [
 				"Guias e novidades de Aniimo",
@@ -88,20 +77,14 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			// 图标支持 Iconify 格式：fa7-brands:github、fa7-solid:envelope、mdi:rss 等
 			links: [
 				{
-					name: "GitHub",
-					icon: "fa7-brands:github",
-					url: "https://github.com/CuteLeaf/Firefly",
-					showName: true,
+					name: "Aniimo Tools",
+					icon: "material-symbols:home",
+					url: "https://aniimo.ogoulart.dev/",
 				},
 				{
-					name: "Email",
-					icon: "fa7-solid:envelope",
-					url: "mailto:xiaye@msn.com",
-				},
-				{
-					name: "Sponsor",
-					icon: "material-symbols:favorite",
-					url: "https://blog.cuteleaf.cn/sponsor/",
+					name: "Ko-fi",
+					icon: "fa7-solid:mug-hot",
+					url: "https://ko-fi.com/ogoul4rt",
 				},
 				{
 					name: "RSS",

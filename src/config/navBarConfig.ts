@@ -24,25 +24,11 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 	links.push(LinkPresets.About);
 
-	// Volta pro site principal e redes.
 	links.push({
-		name: "Links",
-		url: "#",
-		icon: "material-symbols:link",
-		children: [
-			{
-				name: "Aniimo Tools",
-				url: "https://aniimo.ogoulart.dev/",
-				external: true,
-				icon: "material-symbols:home",
-			},
-			{
-				name: "GitHub",
-				url: "https://github.com/goul4rt/aniimo-tools",
-				external: true,
-				icon: "fa7-brands:github",
-			},
-		],
+		name: "Aniimo Tools",
+		url: "https://aniimo.ogoulart.dev/",
+		external: true,
+		icon: "material-symbols:home",
 	});
 
 	return { links } as NavBarConfig;

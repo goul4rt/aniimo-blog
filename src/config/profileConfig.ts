@@ -9,7 +9,7 @@ export const profileConfig: ProfileConfig = {
 	avatar: "https://aniimo.ogoulart.dev/logo.png",
 
 	// 名字
-	name: "Aniimo Tools",
+	name: "AniimoBrasil",
 
 	// 个人signature
 	bio: "Fan-site não-oficial de Aniimo, feito pela comunidade brasileira.",
@@ -19,12 +19,6 @@ export const profileConfig: ProfileConfig = {
 			name: "Aniimo Tools",
 			icon: "material-symbols:home",
 			url: "https://aniimo.ogoulart.dev/",
-			showName: false,
-		},
-		{
-			name: "GitHub",
-			icon: "fa7-brands:github",
-			url: "https://github.com/goul4rt/aniimo-tools",
 			showName: false,
 		},
 		{

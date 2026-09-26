@@ -13,7 +13,8 @@ export const WALLPAPER_BANNER = "banner",
 
 // Banner height unit: vh
 export const BANNER_HEIGHT = 35;
-export const BANNER_HEIGHT_EXTEND = 30;
+// Reduzido de 30 pra 10 (banner da home ficava em 65vh, imagem grande demais).
+export const BANNER_HEIGHT_EXTEND = 10;
 export const BANNER_HEIGHT_HOME: number = BANNER_HEIGHT + BANNER_HEIGHT_EXTEND;
 
 // The height the main panel overlaps the banner, unit: rem
